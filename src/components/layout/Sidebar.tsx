@@ -80,3 +80,51 @@ export default function Sidebar() {
       <nav className="flex-1 px-3 py-5 overflow-y-auto space-y-6">
         {NAV_ITEMS.map(group => (
           <div key={group.section}>
+            <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', paddingLeft: '12px', marginBottom: '8px' }}>
+              {group.section}
+            </p>
+            <div className="space-y-0.5">
+              {(group.links as any[]).filter(link => !link.adminOnly || perfil?.rol === 'administrador').map(link => {
+                const Icon = link.icon
+                const active = isActive(link.href)
+                return (
+                  <Link key={link.href} href={link.href} style={{
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '8px 12px',
+                    borderRadius: '8px', textDecoration: 'none', transition: 'all 0.2s',
+                    background: active ? 'rgba(255,255,255,0.15)' : 'transparent',
+                    color: active ? 'white' : 'rgba(255,255,255,0.6)',
+                  }}>
+                    <Icon size={16} style={{ flexShrink: 0 }} />
+                    <span style={{ flex: 1, fontSize: '14px' }}>{link.label}</span>
+                    {active && <ChevronRight size={12} style={{ opacity: 0.5 }} />}
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        ))}
+      </nav>
+
+      <div className="px-3 py-4 border-t border-white/10">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '8px', borderRadius: '12px', cursor: 'pointer' }}
+          className="hover:bg-white/10 transition-all group">
+          <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <span style={{ color: 'white', fontSize: '12px', fontWeight: 700 }}>{getInitials(perfil?.nombre_completo)}</span>
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{ color: 'white', fontSize: '12px', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {!listo ? 'Cargando...' : (perfil?.nombre_completo || 'Usuario')}
+            </p>
+            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '11px', textTransform: 'capitalize' }}>
+              {perfil?.rol || ''}
+            </p>
+          </div>
+          <button onClick={handleLogout} style={{ color: 'rgba(255,255,255,0.3)', padding: '4px' }}
+            className="opacity-0 group-hover:opacity-100 hover:text-red-300 transition-all">
+            <LogOut size={14} />
+          </button>
+        </div>
+      </div>
+    </aside>
+  )
+}
